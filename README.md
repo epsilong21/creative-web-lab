@@ -57,3 +57,14 @@ su estado de escena (`desktop` / `mobile`). La coreografía lo recoge automátic
 - Calidad adaptativa: menos partículas, menos subdivisiones y DPR limitado en móvil.
 - `prefers-reduced-motion`: sin secuencia de entrada, sin parallax, sin cursor propio.
 - El lienzo es `aria-hidden` y no captura eventos; el contenido es HTML navegable.
+
+## Publicación (GitHub Pages)
+
+En vivo: **https://epsilong21.github.io/creative-web-lab/**
+
+```bash
+npm run deploy
+```
+
+Exporta el sitio estático (`out/`) con `basePath=/creative-web-lab` y lo sube a la rama
+`gh-pages`, que GitHub Pages sirve directamente. El código fuente vive en `main`.
