@@ -1,26 +1,153 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ── Tokens ─────────────────────────────────────────────── */
+@theme {
+  --color-abyss: #0a0c1f; /* fondo base, índigo abisal */
+  --color-haze: #1c2140; /* superficies y líneas */
+  --color-lumen: #e8e6f5; /* texto principal */
+  --color-dim: #8a8fb0; /* texto secundario */
+  --color-film-a: #7fe7dc; /* película iridiscente: cian */
+  --color-film-b: #b79cff; /* lila */
+  --color-film-c: #ffb38a; /* melocotón */
+
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-instrument), system-ui, sans-serif;
+
+  --ease-lab: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Base ───────────────────────────────────────────────── */
+html {
+  background: var(--color-abyss);
+  color: var(--color-lumen);
+  scrollbar-color: var(--color-haze) var(--color-abyss);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-film-b);
+  color: var(--color-abyss);
+}
+
+:focus-visible {
+  outline: 1.5px solid var(--color-film-a);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* Atmósfera: halo fijo detrás del lienzo WebGL. */
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: -20;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 50% at 50% 45%, var(--tint, #1b2050) 0%, transparent 70%),
+    radial-gradient(120% 80% at 50% 120%, #05061200 0%, #050612 100%);
+}
+
+/* Grano sutil: elimina el banding de los degradados oscuros. */
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Estado previo a la entrada. Solo con JS activo (clase .js en <html>)
+   y movimiento permitido; sin JS el contenido se ve tal cual. */
+@media (prefers-reduced-motion: no-preference) {
+  .js .intro-line {
+    transform: translateY(110%);
+  }
+  .js .intro-fade {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+html {
+  @media (prefers-reduced-motion: no-preference) {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Titular del hero: se invierte sobre el espécimen. */
+.display-line {
+  display: block;
+  mix-blend-mode: difference;
+  will-change: transform;
+}
+
+/* ── Cursor ─────────────────────────────────────────────── */
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  pointer-events: none;
+  border-radius: 9999px;
+  translate: -50% -50%;
+}
+
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--color-lumen);
+  mix-blend-mode: difference;
+}
+
+.cursor-ring {
+  width: 36px;
+  height: 36px;
+  border: 1px solid color-mix(in oklab, var(--color-lumen) 45%, transparent);
+  transition:
+    width 0.35s var(--ease-lab),
+    height 0.35s var(--ease-lab),
+    border-color 0.35s var(--ease-lab),
+    background-color 0.35s var(--ease-lab);
+}
+
+.cursor-ring[data-active="true"] {
+  width: 72px;
+  height: 72px;
+  border-color: var(--color-film-a);
+  background: color-mix(in oklab, var(--color-film-a) 10%, transparent);
+}
+
+/* El cursor propio solo existe con ratón y movimiento permitido. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html.has-cursor,
+  html.has-cursor a,
+  html.has-cursor button {
+    cursor: none;
+  }
+}
+
+/* Indicador de scroll del hero. */
+@keyframes probe {
+  0% { transform: scaleY(0); transform-origin: top; }
+  45% { transform: scaleY(1); transform-origin: top; }
+  55% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+.scroll-probe {
+  animation: probe 2.4s var(--ease-lab) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-probe {
+    animation: none;
+  }
 }
