@@ -32,9 +32,18 @@ export function PhaseSection({ phase, index, total }: PhaseSectionProps) {
         >
           {phase.title}
         </h2>
-        <p data-depth="0.6" className="mt-6 max-w-[46ch] text-lumen/75">
+        {/* Con dos variantes, solo una se muestra (y se lee) según el puntero. */}
+        <p
+          data-depth="0.6"
+          className={`mt-6 max-w-[46ch] text-lumen/75 ${phase.touchBody ? "only-fine-pointer" : ""}`}
+        >
           {phase.body}
         </p>
+        {phase.touchBody && (
+          <p data-depth="0.6" className="only-coarse-pointer mt-6 max-w-[46ch] text-lumen/75">
+            {phase.touchBody}
+          </p>
+        )}
       </div>
     </section>
   );

@@ -26,16 +26,12 @@ export function Choreography({ children }: { children: ReactNode }) {
       const atmosphere = document.querySelector<HTMLElement>(".atmosphere");
 
       // 1 · Entrada ------------------------------------------------------
+      // Los textos del hero entran con CSS (globals.css, .intro-line/.intro-fade)
+      // desde el primer pintado, sin esperar a la hidratación; aquí solo la escena.
       if (reduce) {
         sceneState.intro = 1;
-        gsap.set("[data-intro-line]", { y: 0 });
-        gsap.set("[data-intro-fade]", { autoAlpha: 1 });
       } else {
-        gsap
-          .timeline({ defaults: { ease: "expo.out" } })
-          .to(sceneState, { intro: 1, duration: 2.6, ease: "power2.out" }, 0)
-          .to("[data-intro-line]", { y: 0, duration: 1.8, stagger: 0.14 }, 0.15)
-          .to("[data-intro-fade]", { autoAlpha: 1, duration: 1.4, stagger: 0.12 }, 0.9);
+        gsap.to(sceneState, { intro: 1, duration: 2.6, ease: "power2.out" });
       }
 
       // 2 · Estados de escena por sección --------------------------------
@@ -78,6 +74,10 @@ export function Choreography({ children }: { children: ReactNode }) {
         },
       );
 
+      // En los tramos enlazados al scroll se anima solo opacity (no autoAlpha):
+      // visibility: hidden sacaría los textos del árbol de accesibilidad y un
+      // lector de pantalla no podría llegar a las secciones que no están en vista.
+
       // 3 · Salida del hero: las dos líneas del titular se separan -------
       const heroLines = gsap.utils.toArray<HTMLElement>("[data-hero-split]");
       gsap
@@ -86,10 +86,10 @@ export function Choreography({ children }: { children: ReactNode }) {
         })
         .to(heroLines, {
           xPercent: (i) => (reduce ? 0 : i === 0 ? -14 : 14),
-          autoAlpha: 0,
+          opacity: 0,
           ease: "power1.in",
         })
-        .to("[data-hero-meta]", { autoAlpha: 0, ease: "none" }, 0);
+        .to("[data-hero-meta]", { opacity: 0, ease: "none" }, 0);
 
       // 4 · Parallax de los textos de cada fase --------------------------
       gsap.utils.toArray<HTMLElement>("[data-phase]").forEach((section) => {
@@ -98,9 +98,9 @@ export function Choreography({ children }: { children: ReactNode }) {
           defaults: { ease: "none" },
           scrollTrigger: { trigger: section, start: "top bottom", end: "bottom top", scrub: 0.6 },
         });
-        tl.fromTo(copy, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 }, 0.05).to(
+        tl.fromTo(copy, { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.05).to(
           copy,
-          { autoAlpha: 0, duration: 0.25 },
+          { opacity: 0, duration: 0.25 },
           0.72,
         );
         if (reduce) return;

@@ -24,7 +24,9 @@ export function ProgressRail() {
       aria-label="Fases del experimento"
       className="fixed top-1/2 right-6 z-40 hidden -translate-y-1/2 md:block"
     >
-      <ol className="flex flex-col items-end gap-4">
+      {/* Cada enlace ocupa 44 px de alto (área táctil); el ritmo visual es el
+          mismo que con 28 px + 16 px de separación. */}
+      <ol className="flex flex-col items-end">
         {stages.map((stage) => {
           const isActive = stage.id === active;
           return (
@@ -32,7 +34,7 @@ export function ProgressRail() {
               <a
                 href={`#${stage.id}`}
                 aria-current={isActive ? "step" : undefined}
-                className="group flex items-center gap-3 py-1 text-sm"
+                className="group flex min-h-11 min-w-11 items-center justify-end gap-3 text-sm"
               >
                 <span
                   className={`transition-all duration-500 ${

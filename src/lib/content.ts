@@ -24,6 +24,8 @@ export type Stage = {
 export type Phase = Stage & {
   title: string;
   body: string;
+  /** Variante para pantallas táctiles cuando `body` habla del cursor. */
+  touchBody?: string;
   /** Lado del texto en escritorio; el espécimen ocupa el opuesto. */
   side: "left" | "right";
 };
@@ -41,6 +43,8 @@ export const phases: Phase[] = [
     label: "Suspensión",
     title: "Polvo en un haz de luz",
     body: "Miles de partículas flotan a distintas profundidades. Mueve el cursor: lo cercano se desplaza más que lo lejano, y el espacio aparece.",
+    touchBody:
+      "Miles de partículas flotan a distintas profundidades. Al desplazarte, lo cercano se mueve más que lo lejano, y el espacio aparece.",
     side: "left",
     desktop: { x: 1.7, y: 0, scale: 0.9, energy: 0.25, hue: 0.12, spin: 1.2, tint: "#15244d" },
     mobile: { x: 0, y: 1.05, scale: 0.6, energy: 0.25, hue: 0.12, spin: 1.2, tint: "#15244d" },
@@ -59,6 +63,8 @@ export const phases: Phase[] = [
     label: "Refracción",
     title: "Ningún color es fijo",
     body: "La película iridiscente cambia de tono según el ángulo desde el que la miras. Inclina el objeto con el cursor y verás aparecer cian, lila y cobre.",
+    touchBody:
+      "La película iridiscente cambia de tono según el ángulo desde el que la miras. Sigue desplazándote: el objeto gira y verás aparecer cian, lila y cobre.",
     side: "left",
     desktop: { x: 1.55, y: 0.05, scale: 0.98, energy: 0.45, hue: 0.72, spin: 3.8, tint: "#2b1f3a" },
     mobile: { x: 0, y: 1.05, scale: 0.7, energy: 0.45, hue: 0.72, spin: 3.8, tint: "#2b1f3a" },

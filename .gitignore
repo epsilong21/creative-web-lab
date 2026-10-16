@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# qa reports: los .md se versionan, los artefactos no
+/qa-reports/artifacts/

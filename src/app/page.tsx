@@ -14,6 +14,10 @@ export default function Home() {
       <SceneLoader />
       <div aria-hidden className="grain" />
 
+      {/* Antes de <main> en el DOM para que el orden de tabulación siga la página;
+          visualmente es fijo y no cambia de sitio. */}
+      <ProgressRail />
+
       <Choreography>
         <Hero />
         {phases.map((phase, i) => (
@@ -22,7 +26,6 @@ export default function Home() {
         <Finale />
       </Choreography>
 
-      <ProgressRail />
       <Cursor />
     </>
   );
